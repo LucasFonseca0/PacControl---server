@@ -6,6 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
   const clientUrl = process.env.CLIENT_URL
+  console.log("CORS enabled for:", clientUrl)
 
   app.enableCors({
     origin: clientUrl,
