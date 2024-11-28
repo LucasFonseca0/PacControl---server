@@ -1,6 +1,11 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
-import { GameService } from './game.service';
+import {
+  WebSocketGateway,
+  SubscribeMessage,
+  MessageBody,
+  WebSocketServer,
+} from '@nestjs/websockets'
+import { Server, Socket } from 'socket.io'
+import { GameService } from './game.service'
 
 @WebSocketGateway({
   cors: {
@@ -11,34 +16,36 @@ import { GameService } from './game.service';
 })
 export class GameGateway {
   @WebSocketServer()
-  server: Server;
+  server: Server
 
   constructor(private readonly gameService: GameService) {}
 
   handleConnection(client: Socket) {
-    const sessionId = client.handshake.query.sessionId as string;
-    console.log(`Client connected with sessionId: ${sessionId}`);
-    client.join(sessionId);
-    this.gameService.createSession(sessionId, client.id);
-  }  
-
+    const sessionId = client.handshake.query.sessionId as string
+    console.log(`Client connected with sessionId: ${sessionId}`)
+    client.join(sessionId)
+    this.gameService.createSession(sessionId, client.id)
+  }
 
   @SubscribeMessage('startGame')
   handleStartGame(@MessageBody() data: { sessionId: string }): void {
-    this.gameService.startGame(data.sessionId);
-    console.log(data.sessionId);
-    this.server.to(data.sessionId).emit('gameStarted');
+    this.gameService.startGame(data.sessionId)
+    this.server.to(data.sessionId).emit('gameStarted')
   }
 
   @SubscribeMessage('control')
-  handleControl(@MessageBody() data: { action: string, sessionId: string }): void {
-    this.server.to(data.sessionId).emit('gameAction', data.action);
-    console.log(`Emitindo gameAction para sessionId: ${data.sessionId} com ação: ${data.action}`);
+  handleControl(
+    @MessageBody() data: { action: string; sessionId: string }
+  ): void {
+    this.server.to(data.sessionId).emit('gameAction', data.action)
   }
 
   @SubscribeMessage('testMessage')
-  handleTestMessage(@MessageBody() data: { message: string, sessionId: string }): void {
-    console.log(`Mensagem recebida de ${data.sessionId}: ${data.message}`);
-    this.server.to(data.sessionId).emit('responseMessage', { message: 'Mensagem recebida pelo backend!' });
+  handleTestMessage(
+    @MessageBody() data: { message: string; sessionId: string }
+  ): void {
+    this.server
+      .to(data.sessionId)
+      .emit('responseMessage', { message: 'hello world!' })
   }
 }
