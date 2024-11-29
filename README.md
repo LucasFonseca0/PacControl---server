@@ -20,8 +20,8 @@ This is the backend server for the Pac-Man Arcade Game, responsible for handling
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/yourusername/pacman-arcade-game-backend.git
-   cd pacman-arcade-game-backend
+   git clone https://github.com/LucasFonseca0/PacControl---server.git
+   cd PacControl---server
    ```
 
 2. **Install Dependencies**
